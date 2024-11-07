@@ -1,25 +1,41 @@
-import '../css/app.css';
-import './bootstrap';
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { InertiaProgress } from "@inertiajs/progress";
 
-import { createInertiaApp } from '@inertiajs/react';
-import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { createRoot } from 'react-dom/client';
+// Importa tus componentes
+import Home from "./Pages/Home";
+import Login from "./Pages/Auth/Login";
+import Register from "./Pages/Auth/Register";
+import Dashboard from "./Pages/Dashboard"; // Asegúrate de que la ruta es correcta
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const appName = window.document.getElementsByTagName('title')[0]?.innerText || 'Laravel';
 
-createInertiaApp({
-    title: (title) => `${title} - ${appName}`,
-    resolve: (name) =>
-        resolvePageComponent(
-            `./Pages/${name}.jsx`,
-            import.meta.glob('./Pages/**/*.jsx'),
-        ),
-    setup({ el, App, props }) {
-        const root = createRoot(el);
-
-        root.render(<App {...props} />);
+const router = createBrowserRouter([
+    {
+        path: "/",
+        element: <Home />,
     },
-    progress: {
-        color: '#4B5563',
+    {
+        path: "/login",
+        element: <Login />,
     },
-});
+    {
+        path: "/register",
+        element: <Register />,
+    },
+    {
+        path: "/dashboard",
+        element: <Dashboard />, // Asegúrate de que estás importando correctamente el componente Dashboard
+    },
+]);
+
+const root = createRoot(document.getElementById("app"));
+root.render(
+    <React.StrictMode>
+        <RouterProvider router={router} />
+    </React.StrictMode>
+);
+
+// Inicializa Inertia Progress
+InertiaProgress.init();

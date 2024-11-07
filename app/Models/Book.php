@@ -2,17 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Book extends Model
 {
-    // Establece la conexión con MongoDB
-    protected $connection = 'mongodb';
+    use HasFactory;
 
-    // Especifica los atributos que se pueden asignar masivamente
     protected $fillable = [
         'title',
+        'genre',
+        'pages',
         'author',
-        'status',
+        'average_rating',
     ];
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_books')
+                    ->withPivot('status', 'rating')
+                    ->withTimestamps();
+    }
 }
